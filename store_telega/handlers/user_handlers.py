@@ -2,7 +2,7 @@ from bot import all_media_dir
 from config.config import load_config
 
 from store_telega.state import *
-from store_telega.logic import pars_file
+from store_telega.logic import pars_file, get_average_price
 
 from aiogram import F, Router
 from aiogram.filters import Command, StateFilter
@@ -56,4 +56,8 @@ async def process_file(message: Message, state: FSMContext):
         await message.answer(
             f"В магазине: {store['title']}\nЦена зюзюблика: {store['price']}"
         )
+    average_price = await get_average_price()
+    await message.answer(f"Средняя цена зюзюблика: ")
+    for url, i in average_price.items():
+        await message.answer(f"В магазине: {url}\nСредняя цена зюзюблика: {i[1]/i[0]}")
     await state.set_state(default_state)

@@ -40,3 +40,21 @@ def add_data(title: str, url: str, price: float) -> bool:
         connection.commit()
 
     return True
+
+
+def get_data() -> list:
+    """
+    Возвращает все данные из базы
+    """
+    data = []
+    # Подключение к базе данных
+    with connect_to_db() as connection:
+        # Создание курсора
+        cursor = connection.cursor()
+        # Запрос всех записей
+        rows = cursor.execute("SELECT * FROM zuzu")
+        # Преобразование каждой записи в словарь
+        for row in rows:
+            data.append({"id": row[0], "title": row[1], "url": row[2], "price": row[3]})
+            # Возвращаем список словарей
+        return data

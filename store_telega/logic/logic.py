@@ -4,7 +4,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 
 from bot import all_media_dir
-from store_telega.crud import add_data
+from store_telega.crud import add_data, get_data
 
 
 driver = webdriver.Chrome()
@@ -24,7 +24,7 @@ async def pars_file(filename: str):
         url = i["url"]
         xpath = i["xpath"]
         driver.get(url)
-        time.sleep(5)
+        time.sleep(10)
         elem = driver.find_element(
             By.XPATH, xpath.split("/")[:-1] if xpath.endswith("/text()") else xpath
         )
@@ -46,18 +46,40 @@ async def pars_file(filename: str):
                     "price": "К сожалению на данном ресурсе не удалось найти нужную информацию",
                 }
             )
-        add_data(title=title, url=url, price=elem.text)
+        add_data(title=title, url=url, price=price)
 
     return data_2
+
+
+async def get_average_price() -> dict:
+    """
+    Функция возвращает словарь с средними ценами по каждому сайту
+    """
+    data = get_data()
+    average_prices = {}
+    for item in data:
+        if item["url"] in average_prices:
+            average_prices[item["url"]][0] += 1
+            average_prices[item["url"]][1] += float(
+                item["price"] if item["price"] else 0,
+            )
+        else:
+            average_prices[item["url"]] = [
+                1,
+                float(item["price"]) if item["price"] else 0,
+            ]
+    return average_prices
 
 
 def price_is_digit(price: str) -> None | float:
     """
     Функция проверяет, является ли цена числом
     """
-    if price.isdigit():
-        return float(price)
-    elif "".join(price.split()[:-1]).isdigit():
-        return float(price.split()[:-1])
-    else:
-        return None
+    new_price = ""
+    for i in price.split():
+        for j in i:
+            if j.isdigit():
+                new_price += j
+    if new_price.isdigit():
+        return float(new_price)
+    return None
