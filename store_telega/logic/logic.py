@@ -29,16 +29,35 @@ async def pars_file(filename: str):
             By.XPATH, xpath.split("/")[:-1] if xpath.endswith("/text()") else xpath
         )
 
-        data_2.append(
-            {
-                "title": title,
-                "price": (
-                    elem.text
-                    if elem
-                    else "К сожалению на данном ресурсе не удалось найти нужную информацию"
-                ),
-            }
-        )
+        price = price_is_digit(str(elem.text))
+
+        if price:
+            data_2.append(
+                {
+                    "title": title,
+                    "price": price,
+                }
+            )
+        else:
+
+            data_2.append(
+                {
+                    "title": title,
+                    "price": "К сожалению на данном ресурсе не удалось найти нужную информацию",
+                }
+            )
         add_data(title=title, url=url, price=elem.text)
 
     return data_2
+
+
+def price_is_digit(price: str) -> None | float:
+    """
+    Функция проверяет, является ли цена числом
+    """
+    if price.isdigit():
+        return float(price)
+    elif "".join(price.split()[:-1]).isdigit():
+        return float(price.split()[:-1])
+    else:
+        return None
