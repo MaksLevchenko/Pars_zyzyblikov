@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import os
+from pathlib import Path
 import dotenv
 
 
@@ -26,3 +27,4 @@ def load_config() -> Config:
 
 
 config = load_config()
+gen_path = Path("store_telega").resolve()

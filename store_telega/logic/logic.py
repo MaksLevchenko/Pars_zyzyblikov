@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from bot import all_media_dir
+from config.config import gen_path
 from store_telega.crud import add_data, get_data
 
 
@@ -39,7 +39,7 @@ async def pars_file(filename: str):
     Функция парсит конфигурационный файл и возвращает словарь с данными
     """
     # Выполняем чтение файла
-    data = pd.read_excel(f"{all_media_dir}/{filename}", engine="openpyxl")
+    data = pd.read_excel(f"{gen_path}/static/{filename}", engine="openpyxl")
 
     data_2 = []
     # Преобразуем полученные данные в словарь

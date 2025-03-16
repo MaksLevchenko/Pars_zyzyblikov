@@ -1,4 +1,4 @@
-from store_telega.bd import connect_to_db
+from store_telega.db import connect_to_db
 
 
 def create_db() -> None:

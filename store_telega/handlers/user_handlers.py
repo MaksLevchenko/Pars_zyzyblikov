@@ -1,4 +1,4 @@
-from bot import all_media_dir
+from config.config import gen_path
 from config.config import load_config
 
 from store_telega.state import *
@@ -49,7 +49,7 @@ async def process_file(message: Message, state: FSMContext):
     file = await message.bot.get_file(file_id)
 
     file_path = await message.bot.download_file(
-        file.file_path, f"{all_media_dir}/{file_name}"
+        file.file_path, f"{gen_path}/static/{file_name}"
     )
     data = await pars_file(filename=file_name)
     for store in data:

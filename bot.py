@@ -1,5 +1,3 @@
-import os
-
 from store_telega.crud import create_db
 from store_telega.handlers import (
     user_handlers,
@@ -14,7 +12,6 @@ from aiogram import Bot, Dispatcher
 
 config = load_config()
 
-all_media_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
 # Вместо BOT TOKEN HERE нужно вставить токен вашего бота,
 # полученный у @BotFather
 BOT_TOKEN = config.tg_bot.token
